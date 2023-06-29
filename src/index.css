@@ -1,0 +1,58 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --poppins: "Poppins";
+    --tmdbDarkBlue: 3 37 65;
+    --tmdbLightGreen: 30 213 169;
+    --tmdbLightBlue: 1 180 228;
+  }
+}
+
+@layer components {
+  input[type="text"] {
+    @apply text-black w-80 md:w-auto h-12 leading-[3rem] px-6 py-3 rounded-full focus:outline-none;
+  }
+  button {
+    @apply text-white bg-tmdbLightGreen px-6 py-3 rounded-full hover:bg-tmdbLightBlue transition duration-200;
+  }
+
+  .link {
+    @apply cursor-pointer hover:text-tmdbLightBlue;
+  }
+
+  .pagination-list-item a {
+    @apply w-10 h-10 hidden md:flex items-center justify-center rounded-md hover:text-white hover:bg-tmdbLightBlue;
+  }
+
+  .pagination-list-item-active a {
+    @apply bg-tmdbLightGreen text-white flex;
+  }
+
+  .pagination-list-item-disabled span {
+    @apply bg-gray-300 text-white hover:bg-gray-300 cursor-not-allowed;
+  }
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--poppins);
+}
+
+.undraggable {
+  -webkit-user-drag: none;
+}
+
+.loading-wrapper {
+  background: rgba(45, 46, 55, 0.6);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
