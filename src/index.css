@@ -21,8 +21,12 @@
     @apply text-white bg-tmdbLightGreen px-6 py-3 rounded-full hover:bg-tmdbLightBlue transition duration-200;
   }
 
+  .chip {
+    @apply text-sm text-white px-2 py-1 rounded-full;
+  }
+
   .link {
-    @apply cursor-pointer hover:text-tmdbLightBlue;
+    @apply cursor-pointer hover:text-tmdbLightBlue transition-all ease-in-out duration-100;
   }
 
   .pagination-list-item a {
@@ -38,8 +42,9 @@
   }
 }
 
-html{
+html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
 }
 
 body {
@@ -55,4 +60,13 @@ body {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
+}
+
+.menu {
+  transform: translateX(-100vw);
+  transition: transform 300ms ease-in-out;
+}
+
+.open-menu {
+  transform: translateX(0);
 }
