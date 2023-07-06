@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFullPageLoader } from "../hooks/useFullPageLoader";
 import moment from "moment";
+import { MovieReview } from "./MovieReview";
+import { FaFacebook, FaInstagram, FaLink, FaTwitter } from "react-icons/fa";
+import languages from "../assets/documents/language-codes.json";
 
 const MovieDetails = () => {
   const tmdb_auth = {
@@ -13,11 +16,51 @@ const MovieDetails = () => {
   const posterSize = "w342";
   const backdropWidth = "original";
 
+  const currencyFormat = new Intl.NumberFormat("en-us", {
+    currency: "USD",
+    style: "currency",
+  });
+  const langs = languages;
+
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
   const params = useParams();
   const [movieDetails, setMovieDetails] = useState({});
   const [movieGenres, setMovieGenres] = useState([]);
+  const [movieCert, setMovieCert] = useState([]);
+
+  const formatDuration = (duration) => {
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+
+    // Add leading zeros if necessary
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${formattedHours}h ${formattedMinutes}m`;
+  };
+
+  const getMovieCertificationsByID = (movieId) => {
+    showLoader();
+    axios
+      .get(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`, {
+        headers: tmdb_auth,
+      })
+      .then((res) => {
+        // console.log(res.data.results);
+        getCertiByCountry(res.data.results);
+      });
+  };
+
+  const getCertiByCountry = (certs) => {
+    const cert = certs.find((cert) => cert.iso_3166_1 === "US");
+
+    const release_date = cert.release_dates.find(
+      (rel_date) => rel_date.type === 3
+    );
+    // console.log(release_date);
+    setMovieCert(release_date);
+  };
 
   const getMovieByID = (movieId) => {
     showLoader();
@@ -26,7 +69,7 @@ const MovieDetails = () => {
         headers: tmdb_auth,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setMovieDetails(res.data);
         setMovieGenres(res.data.genres);
         hideLoader();
@@ -35,71 +78,143 @@ const MovieDetails = () => {
 
   useEffect(() => {
     getMovieByID(params.id);
+    getMovieCertificationsByID(params.id);
   }, []);
 
   return (
     <div>
       <section className="min-h-screen">
         {Object.keys(movieDetails) !== 0 ? (
-          <div
-            className="py-12 my-8"
-            style={{
-              backgroundImage: `linear-gradient(
+          <div className="my-8">
+            <div
+              className="py-12"
+              style={{
+                backgroundImage: `linear-gradient(
                 to right,
                 rgba(3, 37, 65, 1) 0%,
-                rgba(3, 37, 65, 0.6) 100%
+                rgba(3, 37, 65, 0.8) 100%
               ), url(${
                 imgbaseURL + backdropWidth + movieDetails.backdrop_path
               })`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
-          >
-            <div className="card container mx-auto flex gap-8">
-              <div className="w-[342px] flex-none bg-gray-400 rounded-xl shadow-md overflow-hidden">
-                <img
-                  draggable="false"
-                  loading="lazy"
-                  className="w-full h-full object-fill"
-                  src={imgbaseURL + posterSize + movieDetails.poster_path}
-                  alt={movieDetails.title}
-                />
-              </div>
-              <div className="info text-white">
-                <h1 className="text-3xl mb-4">
-                  <span className="font-bold">{movieDetails.title}</span>{" "}
-                  <span>
-                    (
-                    {moment(movieDetails?.release_date, "YYYY-MM-DD").format(
-                      "YYYY"
-                    )}
-                    )
-                  </span>
-                </h1>
-                <div className="flex gap-8 my-4 items-center">
-                  <span className="chip bg-tmdbLightBlue uppercase">pg-13</span>
-                  <span className="">
-                    {moment(movieDetails?.release_date, "YYYY-MM-DD").format(
-                      "YYYY/MM/DD"
-                    )}
-                  </span>
-                  <div id="genres" className="flex gap-2">
-                    {movieGenres.map((genre, idx) => (
-                      <span className="chip bg-tmdbLightGreen" key={idx}>
-                        {genre.name}
-                      </span>
-                    ))}
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                // backgroundPosition: "50% 50%",
+              }}
+            >
+              <div className="card container mx-auto px-8 flex items-center gap-8">
+                {/* poster */}
+                <div className="w-[342px] flex-none bg-gray-400 rounded-xl shadow-md overflow-hidden">
+                  <img
+                    draggable="false"
+                    loading="lazy"
+                    className="w-full h-full object-fill"
+                    src={imgbaseURL + posterSize + movieDetails.poster_path}
+                    alt={movieDetails.title}
+                  />
+                </div>
+                <div className="info text-white">
+                  <h1 className="text-3xl mb-4">
+                    <span className="font-bold">{movieDetails.title}</span>{" "}
+                    <span>
+                      (
+                      {moment(movieDetails?.release_date, "YYYY-MM-DD").format(
+                        "YYYY"
+                      )}
+                      )
+                    </span>
+                  </h1>
+                  <div className="flex gap-4 my-4 items-center">
+                    <span className="chip uppercase">
+                      {movieCert.certification ?? "unrated"}
+                    </span>
+                    <span className="">
+                      {moment(movieCert?.release_date).format("YYYY/MM/DD")}{" "}
+                      {"(US)"}
+                    </span>
+                    <div id="genres" className="flex gap-2">
+                      {movieGenres.map((genre, idx) => (
+                        <span className="chip" key={idx}>
+                          {genre.name}
+                        </span>
+                      ))}
+                    </div>
+                    <span>{formatDuration(movieDetails.runtime)}</span>
+                  </div>
+                  <div className="my-8">
+                    <button className="button">Play Trailer</button>
+                  </div>
+                  <div className="my-4">
+                    <span className="italic">{movieDetails.tagline}</span>
+                  </div>
+                  <div id="overview" className="my-4">
+                    <h2 className="text-xl font-bold my-4">Overview</h2>
+                    <p>{movieDetails.overview}</p>
                   </div>
                 </div>
-                <div className="my-4">
-                  <button className="button">Play Trailer</button>
+              </div>
+            </div>
+            <div className="container mx-auto px-8 my-8 flex gap-8">
+              <div className="w-9/12">
+                <h2 className="text-xl font-bold my-4">Reviews</h2>
+
+                <div className="review-list flex flex-col gap-8">
+                  <MovieReview />
+                  <MovieReview />
                 </div>
-                <div className="my-4">
-                  <span>{movieDetails.tagline}</span>
+              </div>
+              {/* sidebar */}
+              <div className="w-3/12">
+                <div className="id-socials h-7 my-4 mb-16 text-2xl flex gap-4 items-center">
+                  <a
+                    className="link"
+                    href="https://www.facebook.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaFacebook />
+                  </a>
+                  <a
+                    className="link"
+                    href="https://www.instagram.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaInstagram />
+                  </a>
+                  <a
+                    className="link"
+                    href="https://www.twitter.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaTwitter />
+                  </a>
+                  <a
+                    className="link"
+                    href={movieDetails.homepage}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaLink />
+                  </a>
                 </div>
-                <div id="overview" className="my-4">
-                  <h2 className="text-xl font-bold my-4">Overview</h2>
-                  <p>{movieDetails.overview}</p>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <p className="font-bold">Status</p>
+                    <p>{movieDetails.status}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Original Language</p>
+                    <p>{langs[movieDetails.original_language]}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Budget</p>
+                    <p>{currencyFormat.format(movieDetails.budget)}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Revenue</p>
+                    <p>{currencyFormat.format(movieDetails.revenue)}</p>
+                  </div>
                 </div>
               </div>
             </div>
