@@ -28,6 +28,7 @@ const MovieDetails = () => {
   const [movieDetails, setMovieDetails] = useState({});
   const [movieGenres, setMovieGenres] = useState([]);
   const [movieCert, setMovieCert] = useState([]);
+  const [movieReviews, setMovieReviews] = useState([]);
 
   const formatDuration = (duration) => {
     const hours = Math.floor(duration / 60);
@@ -40,6 +41,22 @@ const MovieDetails = () => {
     return `${formattedHours}h ${formattedMinutes}m`;
   };
 
+  const getMovieReviewsByID = (movieId) => {
+    showLoader();
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
+        {
+          headers: tmdb_auth,
+        }
+      )
+      .then((res) => {
+        // console.log(res.data.results);
+        setMovieReviews(res.data.results);
+        hideLoader();
+      });
+  };
+
   const getMovieCertificationsByID = (movieId) => {
     showLoader();
     axios
@@ -49,6 +66,7 @@ const MovieDetails = () => {
       .then((res) => {
         // console.log(res.data.results);
         getCertiByCountry(res.data.results);
+        hideLoader();
       });
   };
 
@@ -79,6 +97,7 @@ const MovieDetails = () => {
   useEffect(() => {
     getMovieByID(params.id);
     getMovieCertificationsByID(params.id);
+    getMovieReviewsByID(params.id);
   }, []);
 
   return (
@@ -158,8 +177,9 @@ const MovieDetails = () => {
                 <h2 className="text-xl font-bold my-4">Reviews</h2>
 
                 <div className="review-list flex flex-col gap-8">
-                  <MovieReview />
-                  <MovieReview />
+                  {movieReviews.map((review, idx) => (
+                    <MovieReview key={idx} review={review} />
+                  ))}
                 </div>
               </div>
               {/* sidebar */}
