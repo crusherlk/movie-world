@@ -6,6 +6,7 @@ import moment from "moment";
 import { MovieReview } from "./MovieReview";
 import { FaFacebook, FaInstagram, FaLink, FaTwitter } from "react-icons/fa";
 import languages from "../assets/documents/language-codes.json";
+import { VideoModal } from "./VideoModal";
 
 const MovieDetails = () => {
   const tmdb_auth = {
@@ -29,6 +30,10 @@ const MovieDetails = () => {
   const [movieGenres, setMovieGenres] = useState([]);
   const [movieCert, setMovieCert] = useState([]);
   const [movieReviews, setMovieReviews] = useState([]);
+  const [movieTrailer, setMovieTrailer] = useState({});
+
+  const [showPlayer, setShowPlayer] = useState(false);
+  const handleOnPlayerClose = () => setShowPlayer(false);
 
   const formatDuration = (duration) => {
     const hours = Math.floor(duration / 60);
@@ -42,7 +47,7 @@ const MovieDetails = () => {
   };
 
   const getMovieReviewsByID = (movieId) => {
-    showLoader();
+    // showLoader();
     axios
       .get(
         `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
@@ -53,12 +58,12 @@ const MovieDetails = () => {
       .then((res) => {
         // console.log(res.data.results);
         setMovieReviews(res.data.results);
-        hideLoader();
+        // hideLoader();
       });
   };
 
   const getMovieCertificationsByID = (movieId) => {
-    showLoader();
+    // showLoader();
     axios
       .get(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`, {
         headers: tmdb_auth,
@@ -66,22 +71,46 @@ const MovieDetails = () => {
       .then((res) => {
         // console.log(res.data.results);
         getCertiByCountry(res.data.results);
-        hideLoader();
+        // hideLoader();
       });
   };
 
   const getCertiByCountry = (certs) => {
     const cert = certs.find((cert) => cert.iso_3166_1 === "US");
 
-    const release_date = cert.release_dates.find(
-      (rel_date) => rel_date.type === 3
-    );
+    let release_date = cert.release_dates.find((rel_date) => {
+      if (rel_date.type === 3) return rel_date;
+    });
+
+    if (release_date === undefined) {
+      release_date = cert.release_dates.find((rel_date) => {
+        return rel_date.certification !== undefined;
+      });
+    }
     // console.log(release_date);
     setMovieCert(release_date);
   };
 
+  const getVideosByID = (movieId) => {
+    // showLoader();
+    axios
+      .get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, {
+        headers: tmdb_auth,
+      })
+      .then((res) => {
+        const movieVids = res.data.results;
+        movieVids.find((video) => {
+          if (video.type === "Trailer" && video.name === "Official Trailer") {
+            // console.log(video);
+            setMovieTrailer(video);
+            // hideLoader();
+          }
+        });
+      });
+  };
+
   const getMovieByID = (movieId) => {
-    showLoader();
+    // showLoader();
     axios
       .get(`https://api.themoviedb.org/3/movie/${movieId}`, {
         headers: tmdb_auth,
@@ -90,14 +119,18 @@ const MovieDetails = () => {
         // console.log(res.data);
         setMovieDetails(res.data);
         setMovieGenres(res.data.genres);
-        hideLoader();
+        // hideLoader();
       });
   };
 
   useEffect(() => {
-    getMovieByID(params.id);
-    getMovieCertificationsByID(params.id);
-    getMovieReviewsByID(params.id);
+    showLoader();
+    Promise.all([
+      getMovieByID(params.id),
+      getMovieCertificationsByID(params.id),
+      getMovieReviewsByID(params.id),
+      getVideosByID(params.id),
+    ]).then(hideLoader());
   }, []);
 
   return (
@@ -159,9 +192,25 @@ const MovieDetails = () => {
                     </div>
                     <span>{formatDuration(movieDetails.runtime)}</span>
                   </div>
+
                   <div className="my-8">
-                    <button className="button">Play Trailer</button>
+                    <button
+                      className="button"
+                      onClick={() => {
+                        // console.log(movieTrailer);
+                        setShowPlayer(true);
+                      }}
+                    >
+                      Play Trailer
+                    </button>
+                    {/* trailer popup */}
+                    <VideoModal
+                      visible={showPlayer}
+                      close={handleOnPlayerClose}
+                      trailer={movieTrailer}
+                    />
                   </div>
+                  {/*  */}
                   <div className="my-4">
                     <span className="italic">{movieDetails.tagline}</span>
                   </div>

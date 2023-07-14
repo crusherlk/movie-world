@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const MovieReview = ({ review }) => {
   return (
     <div className="flex gap-8">
@@ -11,7 +13,12 @@ export const MovieReview = ({ review }) => {
       </div>
       <div className="id-review-content">
         <h2 className="font-bold">{review.author}</h2>
-        <p className="text-xs">on {review.updated_at ?? review.created_at}</p>
+        <p className="text-xs">
+          on{" "}
+          {moment(review.updated_at ?? review.created_at).format(
+            "MMMM DD YYYY, hh:mm a"
+          )}
+        </p>
         <div
           className="my-4"
           dangerouslySetInnerHTML={{ __html: review.content }}

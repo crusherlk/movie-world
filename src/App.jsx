@@ -1,5 +1,6 @@
 import Layout from "./Layout";
 import MovieDetails from "./components/MovieDetails";
+import { Contact } from "./pages/Contact";
 import Home from "./pages/Home";
 import { Popular } from "./pages/Popular";
 import { TopRated } from "./pages/TopRated";
@@ -17,7 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/popular" element={<Popular />} />
         <Route path="/top-rated" element={<TopRated />} />
-        <Route path="/contact" element={<TopRated />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
       </Route>
     )

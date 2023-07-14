@@ -8,7 +8,7 @@ const Layout = () => {
 
   return (
     <div>
-      <nav className="fixed h-24 w-full bg-tmdbDarkBlue text-white flex items-center z-50">
+      <nav className="fixed h-24 w-full bg-tmdbDarkBlue text-white flex items-center z-40">
         <div className="container mx-auto flex items-center justify-between px-8">
           <Link to={"/"}>
             <h1 className="text-2xl font-bold cursor-pointer select-none">
