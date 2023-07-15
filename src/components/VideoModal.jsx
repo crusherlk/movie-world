@@ -9,8 +9,18 @@ export const VideoModal = ({ visible, close, trailer }) => {
     >
       <div>
         <iframe
+          className="hidden lg:block"
           width="854"
           height="480"
+          src={`https://www.youtube.com/embed/${trailer.key}`}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen={true}
+        ></iframe>
+        <iframe
+          className="block lg:hidden"
+          width="320"
+          height="240"
           src={`https://www.youtube.com/embed/${trailer.key}`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -153,7 +153,7 @@ const MovieDetails = () => {
                 // backgroundPosition: "50% 50%",
               }}
             >
-              <div className="card container mx-auto px-8 flex items-center gap-8">
+              <div className="card container mx-auto px-8 flex flex-col lg:flex-row lg:items-center gap-8">
                 {/* poster */}
                 <div className="w-[342px] flex-none bg-gray-400 rounded-xl shadow-md overflow-hidden">
                   <img
@@ -175,7 +175,7 @@ const MovieDetails = () => {
                       )
                     </span>
                   </h1>
-                  <div className="flex gap-4 my-4 items-center">
+                  <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 my-4">
                     <span className="chip uppercase">
                       {movieCert.certification ?? "unrated"}
                     </span>
@@ -221,9 +221,11 @@ const MovieDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="container mx-auto px-8 my-8 flex gap-8">
-              <div className="w-9/12">
-                <h2 className="text-xl font-bold my-4">Reviews</h2>
+            <div className="container mx-auto px-8 my-4 lg:my-8 flex flex-col-reverse lg:flex-row gap-2 lg:gap-8">
+              <div className="lg:w-9/12">
+                <h2 className="text-xl font-bold text-tmdbDarkBlue my-4">
+                  Reviews
+                </h2>
 
                 <div className="review-list flex flex-col gap-8">
                   {movieReviews.map((review, idx) => (
@@ -232,8 +234,8 @@ const MovieDetails = () => {
                 </div>
               </div>
               {/* sidebar */}
-              <div className="w-3/12">
-                <div className="id-socials h-7 my-4 mb-16 text-2xl flex gap-4 items-center">
+              <div className="lg:w-3/12">
+                <div className="id-socials h-7 my-4 lg:mb-16 text-2xl flex gap-4 items-center text-tmdbDarkBlue">
                   <a
                     className="link"
                     href="https://www.facebook.com/"
@@ -269,7 +271,7 @@ const MovieDetails = () => {
                 </div>
                 <div className="flex flex-col gap-4">
                   <div>
-                    <p className="font-bold">Status</p>
+                    <p className="font-bold text-gray-">Status</p>
                     <p>{movieDetails.status}</p>
                   </div>
                   <div>

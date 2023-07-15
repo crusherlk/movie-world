@@ -3,7 +3,7 @@ import moment from "moment";
 export const MovieReview = ({ review }) => {
   return (
     <div className="flex gap-8">
-      <div className="w-16 h-16 flex-none bg-tmdbDarkBlue rounded-full overflow-hidden">
+      <div className="w-8 lg:w-16 h-8 lg:h-16 flex-none bg-tmdbDarkBlue rounded-full overflow-hidden">
         <img
           loading="lazy"
           className="w-full h-full object-fill"
