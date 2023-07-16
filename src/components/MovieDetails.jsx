@@ -155,7 +155,7 @@ const MovieDetails = () => {
             >
               <div className="card container mx-auto px-8 flex flex-col lg:flex-row lg:items-center gap-8">
                 {/* poster */}
-                <div className="w-[342px] flex-none bg-gray-400 rounded-xl shadow-md overflow-hidden">
+                <div className="w-[171px] md:w-[342px] flex-none bg-gray-400 rounded-xl shadow-md overflow-hidden">
                   <img
                     draggable="false"
                     loading="lazy"
@@ -183,11 +183,11 @@ const MovieDetails = () => {
                       {moment(movieCert?.release_date).format("YYYY/MM/DD")}{" "}
                       {"(US)"}
                     </span>
-                    <div id="genres" className="flex gap-2">
+                    <div id="genres" className="flex gap-1 lg:gap-2">
                       {movieGenres.map((genre, idx) => (
-                        <span className="chip" key={idx}>
-                          {genre.name}
-                        </span>
+                        <div className="chip" key={idx}>
+                          <span>{genre.name}</span>
+                        </div>
                       ))}
                     </div>
                     <span>{formatDuration(movieDetails.runtime)}</span>
@@ -223,7 +223,7 @@ const MovieDetails = () => {
             </div>
             <div className="container mx-auto px-8 my-4 lg:my-8 flex flex-col-reverse lg:flex-row gap-2 lg:gap-8">
               <div className="lg:w-9/12">
-                <h2 className="text-xl font-bold text-tmdbDarkBlue my-4">
+                <h2 className="text-xl font-bold my-4 text-gray-800">
                   Reviews
                 </h2>
 
@@ -235,7 +235,7 @@ const MovieDetails = () => {
               </div>
               {/* sidebar */}
               <div className="lg:w-3/12">
-                <div className="id-socials h-7 my-4 lg:mb-16 text-2xl flex gap-4 items-center text-tmdbDarkBlue">
+                <div className="id-socials h-7 my-4 lg:mb-16 text-2xl flex gap-4 items-center text-gray-800">
                   <a
                     className="link"
                     href="https://www.facebook.com/"
@@ -269,7 +269,7 @@ const MovieDetails = () => {
                     <FaLink />
                   </a>
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 text-gray-800">
                   <div>
                     <p className="font-bold text-gray-">Status</p>
                     <p>{movieDetails.status}</p>

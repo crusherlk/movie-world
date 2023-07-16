@@ -12,15 +12,15 @@ export const MovieReview = ({ review }) => {
         />
       </div>
       <div className="id-review-content">
-        <h2 className="font-bold">{review.author}</h2>
-        <p className="text-xs">
+        <h2 className="font-bold text-gray-800">{review.author}</h2>
+        <p className="text-xs text-gray-700">
           on{" "}
           {moment(review.updated_at ?? review.created_at).format(
             "MMMM DD YYYY, hh:mm a"
           )}
         </p>
         <div
-          className="my-4"
+          className="my-4 text-gray-800"
           dangerouslySetInnerHTML={{ __html: review.content }}
         ></div>
         {/* <p className="my-4">{review.content}</p> */}

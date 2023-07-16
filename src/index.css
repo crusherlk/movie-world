@@ -26,7 +26,7 @@
   }
 
   .chip {
-    @apply text-sm text-white px-2 py-1 border-2 border-tmdbLightBlue rounded-full;
+    @apply text-sm text-white px-1 md:px-2 py-1 border-2 border-tmdbLightBlue rounded-full;
   }
 
   .link {
