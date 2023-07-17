@@ -25,7 +25,14 @@ const MovieCard = ({ movieDetails }) => {
         <div className="absolute top-0 left-0 w-full h-full hover:bg-tmdbLightBlue/50 transition-colors ease-in-out duration-300"></div>
       </div>
       <div className="movie-content px-2 py-4">
-        <h1 className="link font-bold">{movieDetails.title}</h1>
+        <h1
+          className="link font-bold"
+          onClick={() => {
+            navigate(`/movie/${movieDetails.id}`);
+          }}
+        >
+          {movieDetails.title}
+        </h1>
         <p className="text-gray-500">
           {DateTime.fromFormat(
             movieDetails.release_date,

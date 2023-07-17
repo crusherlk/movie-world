@@ -81,7 +81,7 @@ const Home = () => {
   return (
     <div id="home" className="container mx-auto min-h-screen">
       {/* banner */}
-      <section className="banner h-[20rem] text-white flex flex-col justify-center items-center lg:items-start px-8">
+      <section className="banner h-[20rem] lg:h-[25rem] text-white flex flex-col justify-center items-center lg:items-start px-8">
         <h1 className="text-4xl font-bold">Welcome</h1>
         <p className="text-center lg:text-start">
           Millions of movies discover. Explore now.

@@ -110,7 +110,7 @@ const MovieDetails = () => {
   };
 
   const getMovieByID = (movieId) => {
-    // showLoader();
+    showLoader();
     axios
       .get(`https://api.themoviedb.org/3/movie/${movieId}`, {
         headers: tmdb_auth,
@@ -119,18 +119,15 @@ const MovieDetails = () => {
         // console.log(res.data);
         setMovieDetails(res.data);
         setMovieGenres(res.data.genres);
-        // hideLoader();
+        hideLoader();
       });
   };
 
   useEffect(() => {
-    showLoader();
-    Promise.all([
-      getMovieByID(params.id),
-      getMovieCertificationsByID(params.id),
-      getMovieReviewsByID(params.id),
-      getVideosByID(params.id),
-    ]).then(hideLoader());
+    getMovieByID(params.id);
+    getMovieCertificationsByID(params.id);
+    getMovieReviewsByID(params.id);
+    getVideosByID(params.id);
   }, []);
 
   return (
